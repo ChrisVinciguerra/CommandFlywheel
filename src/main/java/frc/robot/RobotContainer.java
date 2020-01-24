@@ -10,12 +10,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.PS4Constants;
+import frc.robot.commands.DrivetrainCommands.ArcadeDriveCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,20 +27,26 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CarouselSubsystem m_carousel = new CarouselSubsystem();
-  private final DrivetrainSubsystem m_driveTrain = new DrivetrainSubsystem();
+  private final DrivetrainSubsystem m_drivetrain = new DrivetrainSubsystem();
   private final FlywheelSubsystem m_flywheel = new FlywheelSubsystem();
-  private final LimelightSubsystem m_limeLight = new LimelightSubsystem();
+  private final LimelightSubsystem m_limelight = new LimelightSubsystem();
   private final Joystick m_driverController = new Joystick(PS4Constants.kDriverControllerPort);
 
   /**
-   * The container for the robot.  Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-    //Set default commands
-    m_driveTrain.setDefaultCommand(new RunCommand(()->m_driveTrain.arcadeDrive(-m_driverController.getRawAxis(PS4Constants.kLeftY), (m_driverController.getRawAxis(PS4Constants.kLeftTrigger) + 1) / 2, (m_driverController.getRawAxis(PS4Constants.kRightTrigger) + 1) / 2), m_driveTrain));
+    // Set default commands
+
+    // Drivetrain
+    m_drivetrain.setDefaultCommand(
+        new ArcadeDriveCommand(m_drivetrain, () -> m_driverController.getRawAxis(PS4Constants.kLeftY),
+            () -> (m_driverController.getRawAxis(PS4Constants.kLeftTrigger) + 1) / 2,
+            () -> (m_driverController.getRawAxis(PS4Constants.kRightTrigger) + 1) / 2));
+
     
   }
 
@@ -51,7 +57,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    
   }
 
   /**
