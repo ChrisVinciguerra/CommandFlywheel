@@ -6,60 +6,61 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FlywheelConstants;
 
 public class FlywheelSubsystem extends SubsystemBase {
-    private final CANSparkMax neoFlywheel;
-    private final CANPIDController neoController;
-    private final CANEncoder neoEncoder;
-    private boolean atSpeed;
-    private double setPoint;
+    private final CANSparkMax m_neoFlywheel;
+    private final CANPIDController m_neoController;
+    private final CANEncoder m_neoEncoder;
+    private double m_setPoint;
 
     public FlywheelSubsystem() {
-        neoFlywheel = new CANSparkMax(6, MotorType.kBrushless);
-        neoFlywheel.restoreFactoryDefaults();
-        neoFlywheel.setInverted(true);
-        neoFlywheel.setIdleMode(IdleMode.kBrake);
-        neoFlywheel.enableVoltageCompensation(12);
-        neoFlywheel.setSmartCurrentLimit(40);
-        neoController = neoFlywheel.getPIDController();
-        neoEncoder = neoFlywheel.getEncoder();
+        // Initialize Motors
+        m_neoFlywheel = new CANSparkMax(6, MotorType.kBrushless);
+        m_neoFlywheel.restoreFactoryDefaults();
+        m_neoFlywheel.setInverted(true);
+        m_neoFlywheel.setIdleMode(IdleMode.kBrake);
+        m_neoFlywheel.enableVoltageCompensation(12);
+        m_neoFlywheel.setSmartCurrentLimit(40);
+        m_neoController = m_neoFlywheel.getPIDController();
+        m_neoEncoder = m_neoFlywheel.getEncoder();
 
-        neoController.setP(FlywheelConstants.kP);
-        neoController.setI(FlywheelConstants.kI);
-        neoController.setD(FlywheelConstants.kD);
-        neoController.setIZone(FlywheelConstants.kIz);
-        neoController.setFF(FlywheelConstants.kFF);
-        neoController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
+        m_neoController.setP(FlywheelConstants.kP);
+        m_neoController.setI(FlywheelConstants.kI);
+        m_neoController.setD(FlywheelConstants.kD);
+        m_neoController.setIZone(FlywheelConstants.kIz);
+        m_neoController.setFF(FlywheelConstants.kFF);
+        m_neoController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
     }
 
     public void periodic() {
-        double speed = neoEncoder.getVelocity();
-        SmartDashboard.putNumber("Flywheel SetPoint", setPoint);
+        double speed = m_neoEncoder.getVelocity();
+        SmartDashboard.putNumber("Flywheel SetPoint", m_setPoint);
         SmartDashboard.putNumber("Flywheel Speed Graph", speed);
         SmartDashboard.putNumber("Flywheel Speed", speed);
-        SmartDashboard.putNumber("Flywheel Temperature", neoFlywheel.getMotorTemperature());
-        SmartDashboard.putNumber("Flywheel Current", neoFlywheel.getOutputCurrent());
-        SmartDashboard.putNumber("Flywheel output", neoFlywheel.getAppliedOutput());
-
-        atSpeed = setPoint == 0 ? false : Math.abs(setPoint - neoEncoder.getVelocity()) < 20;
+        SmartDashboard.putNumber("Flywheel Temperature", m_neoFlywheel.getMotorTemperature());
+        SmartDashboard.putNumber("Flywheel Current", m_neoFlywheel.getOutputCurrent());
+        SmartDashboard.putNumber("Flywheel Output", m_neoFlywheel.getAppliedOutput());
     }
 
     public void setSetpoint(double setPoint) {
-        this.setPoint = setPoint;
-        
+        m_setPoint = setPoint;
+
         // Disable the motor completely at rest, preventing oscillations
         if (setPoint == 0) {
-            neoFlywheel.stopMotor();
+            m_neoFlywheel.stopMotor();
         } else {
-            neoController.setReference(setPoint, ControlType.kVelocity);
+            m_neoController.setReference(setPoint, ControlType.kVelocity);
         }
     }
 
-    public boolean isAtSpeed() {
-        return atSpeed;
+    public double getSetpoint() {
+        return m_setPoint;
+    }
+
+    public double getVelocity() {
+        return m_neoEncoder.getVelocity();
     }
 }

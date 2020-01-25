@@ -1,14 +1,9 @@
-package frc.robot.commands.DrivetrainCommands;
+package frc.robot.commands.drivetraincommands;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
-
 import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/**
- * An example command that uses an example subsystem.
- */
 public class ArcadeDriveCommand extends CommandBase {
 
 	private final DrivetrainSubsystem m_drivetrainSubsystem;
@@ -23,8 +18,6 @@ public class ArcadeDriveCommand extends CommandBase {
 		addRequirements(drivetrainSubsystem);
 	}
 
-	// Called every time the scheduler runs while the command is scheduled.
-	@Override
 	public void execute() {
 		double speedStraight = Math.abs(m_speedStraight.getAsDouble()) > .05 ? m_speedStraight.getAsDouble() : 0;
 		double speedLeft = Math.abs(m_speedLeft.getAsDouble()) > .05 ? m_speedLeft.getAsDouble() : 0;

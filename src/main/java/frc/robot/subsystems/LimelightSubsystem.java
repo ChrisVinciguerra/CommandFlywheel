@@ -12,7 +12,7 @@ public class LimelightSubsystem extends SubsystemBase {
         limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
-    public boolean isTarget() {
+    public boolean isTargetVisible() {
         return limelightTable.getEntry("tv").getDouble(0) == 1;
     }
 

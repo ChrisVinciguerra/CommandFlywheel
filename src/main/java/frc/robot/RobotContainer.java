@@ -7,66 +7,62 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.*;
-import frc.robot.Constants.PS4Constants;
-import frc.robot.commands.DrivetrainCommands.ArcadeDriveCommand;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.ControllerConstants.*;
+import frc.robot.commands.drivetraincommands.ArcadeDriveCommand;
+import frc.robot.commands.drivetraincommands.LimelightTargetCommand;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-/**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a "declarative" paradigm, very little robot logic should
- * actually be handled in the {@link Robot} periodic methods (other than the
- * scheduler calls). Instead, the structure of the robot (including subsystems,
- * commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final CarouselSubsystem m_carousel = new CarouselSubsystem();
-  private final DrivetrainSubsystem m_drivetrain = new DrivetrainSubsystem();
-  private final FlywheelSubsystem m_flywheel = new FlywheelSubsystem();
-  private final LimelightSubsystem m_limelight = new LimelightSubsystem();
-  private final Joystick m_driverController = new Joystick(PS4Constants.kDriverControllerPort);
+	private final CarouselSubsystem m_carousel = new CarouselSubsystem();
+	private final DrivetrainSubsystem m_drivetrain = new DrivetrainSubsystem();
+	private final FeederSubsystem m_feeder = new FeederSubsystem();
+	private final FlywheelSubsystem m_flywheel = new FlywheelSubsystem();
+	private final LimelightSubsystem m_limelight = new LimelightSubsystem();
+	private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
+	public RobotContainer() {
+		configureButtonBindings();
 
-    // Set default commands
+		// Drivetrain
+		m_drivetrain.setDefaultCommand(
+				new ArcadeDriveCommand(m_drivetrain, () -> m_driverController.getRawAxis(Axis.kLeftY),
+						() -> (m_driverController.getRawAxis(Axis.kLeftTrigger) + 1) / 2,
+						() -> (m_driverController.getRawAxis(Axis.kRightTrigger) + 1) / 2));
 
-    // Drivetrain
-    m_drivetrain.setDefaultCommand(
-        new ArcadeDriveCommand(m_drivetrain, () -> m_driverController.getRawAxis(PS4Constants.kLeftY),
-            () -> (m_driverController.getRawAxis(PS4Constants.kLeftTrigger) + 1) / 2,
-            () -> (m_driverController.getRawAxis(PS4Constants.kRightTrigger) + 1) / 2));
+	}
 
-    
-  }
+	private void configureButtonBindings() {
+		// Flywheel
+		new POVButton(m_driverController, DPad.kDown).whenPressed(() -> m_flywheel.setSetpoint(1000), m_flywheel);
+		new POVButton(m_driverController, DPad.kLeft).whenPressed(() -> m_flywheel.setSetpoint(1200), m_flywheel);
+		new POVButton(m_driverController, DPad.kUp).whenPressed(() -> m_flywheel.setSetpoint(1400), m_flywheel);
+		new POVButton(m_driverController, DPad.kRight).whenPressed(() -> m_flywheel.setSetpoint(1600), m_flywheel);
+		new JoystickButton(m_driverController, Button.kLeftBumper).whileHeld(
+				() -> m_flywheel.setSetpoint(-m_driverController.getRawAxis(Axis.kRightY) * FlywheelConstants.kMaxRPM),
+				m_flywheel);
+		new JoystickButton(m_driverController, Button.kRightBumper).whileHeld(() -> m_flywheel.setSetpoint(0),
+				m_flywheel);
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by instantiating a {@link GenericHID} or one of its subclasses
-   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
-   * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    
-  }
+		// Carousel
+		new JoystickButton(m_driverController, Button.kSquare).whenPressed(() -> m_carousel.rotate(1), m_carousel);
+		new JoystickButton(m_driverController, Button.kTriangle).whenPressed(() -> m_carousel.rotate(0), m_carousel);
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return null;// m_autoCommand;
-  }
+		// Feeder
+		new JoystickButton(m_driverController, Button.kX).whenPressed(() -> m_feeder.feed(1), m_feeder);
+		new JoystickButton(m_driverController, Button.kCircle).whenPressed(() -> m_feeder.feed(0), m_feeder);
+
+		// Limelight
+		new JoystickButton(m_driverController, Button.kTrackpad)
+				.whenPressed(new LimelightTargetCommand(m_limelight, m_drivetrain));
+	}
+
+	public Command getAutonomousCommand() {
+		return null;
+	}
 }
