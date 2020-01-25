@@ -47,7 +47,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 
     public void setSetpoint(double setPoint) {
         m_setPoint = setPoint;
-
+        
         // Disable the motor completely at rest, preventing oscillations
         if (setPoint == 0) {
             m_neoFlywheel.stopMotor();

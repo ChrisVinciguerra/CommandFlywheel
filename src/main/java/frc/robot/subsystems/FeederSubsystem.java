@@ -8,13 +8,13 @@ import frc.robot.Constants.CarouselConstants;
 
 public class FeederSubsystem extends SubsystemBase {
 
-    private final TalonSRX feedMotor;
+    private final TalonSRX m_feedMotor;
 
     public FeederSubsystem() {
-        feedMotor = new TalonSRX(CarouselConstants.kFeedPort);
+        m_feedMotor = new TalonSRX(CarouselConstants.kFeedPort);
     }
 
     public void feed(double speed) {
-        feedMotor.set(ControlMode.PercentOutput, speed);
+        m_feedMotor.set(ControlMode.PercentOutput, speed);
     }
 }

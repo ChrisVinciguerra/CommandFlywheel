@@ -6,29 +6,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase {
 
-    private final NetworkTable limelightTable;
+    private final NetworkTable m_limelightTable;
 
     public LimelightSubsystem() {
-        limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+        m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
     public boolean isTargetVisible() {
-        return limelightTable.getEntry("tv").getDouble(0) == 1;
+        return m_limelightTable.getEntry("tv").getDouble(0) == 1;
     }
 
     public double getXAngle() {
-        return limelightTable.getEntry("tx").getDouble(0);
+        return m_limelightTable.getEntry("tx").getDouble(0);
     }
 
     public double getYAngle() {
-        return limelightTable.getEntry("ty").getDouble(0);
+        return m_limelightTable.getEntry("ty").getDouble(0);
     }
 
     public void turnOnLight() {
-        limelightTable.getEntry("ledmode").setNumber(1);
+        m_limelightTable.getEntry("ledmode").setNumber(1);
     }
 
     public void turnOffLight() {
-        limelightTable.getEntry("ledmode").setNumber(0);
+        m_limelightTable.getEntry("ledmode").setNumber(0);
     }
 }

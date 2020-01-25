@@ -7,31 +7,32 @@ import frc.robot.Constants.DrivetrainConstants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
-  private final TalonSRX topLeft, frontLeft, backLeft, topRight, frontRight, backRight;
+  private final TalonSRX m_topLeft, m_frontLeft, m_backLeft, m_topRight, m_frontRight, m_backRight;
 
   public DrivetrainSubsystem() {
-    topLeft = new TalonSRX(DrivetrainConstants.kTopLeftPort);
-    topLeft.setInverted(true);
-    frontLeft = new TalonSRX(DrivetrainConstants.kFrontLeftPort);
-    frontLeft.setInverted(false);
-    frontLeft.follow(topLeft);
-    backLeft = new TalonSRX(DrivetrainConstants.kBackLeftPort);
-    backLeft.setInverted(false);
-    backLeft.follow(topLeft);
+    m_topLeft = new TalonSRX(DrivetrainConstants.kTopLeftPort);
+    m_topLeft.setInverted(true);
+    
+    m_frontLeft = new TalonSRX(DrivetrainConstants.kFrontLeftPort);
+    m_frontLeft.setInverted(false);
+    m_frontLeft.follow(m_topLeft);
+    m_backLeft = new TalonSRX(DrivetrainConstants.kBackLeftPort);
+    m_backLeft.setInverted(false);
+    m_backLeft.follow(m_topLeft);
 
-    topRight = new TalonSRX(DrivetrainConstants.kTopRightPort);
-    topRight.setInverted(true);
-    frontRight = new TalonSRX(DrivetrainConstants.kFrontRightPort);
-    frontRight.setInverted(true);
-    frontRight.follow(topRight);
-    backRight = new TalonSRX(DrivetrainConstants.kBackRightPort);
-    backRight.setInverted(false);
-    backRight.follow(topRight);
+    m_topRight = new TalonSRX(DrivetrainConstants.kTopRightPort);
+    m_topRight.setInverted(true);
+    m_frontRight = new TalonSRX(DrivetrainConstants.kFrontRightPort);
+    m_frontRight.setInverted(true);
+    m_frontRight.follow(m_topRight);
+    m_backRight = new TalonSRX(DrivetrainConstants.kBackRightPort);
+    m_backRight.setInverted(false);
+    m_backRight.follow(m_topRight);
   }
 
   public void arcadeDrive(double speedStraight, double speedLeft, double speedRight) {
-    topLeft.set(ControlMode.PercentOutput, speedStraight - speedLeft + speedRight);
-    topRight.set(ControlMode.PercentOutput, speedStraight + speedLeft - speedRight);
+    m_topLeft.set(ControlMode.PercentOutput, speedStraight - speedLeft + speedRight);
+    m_topRight.set(ControlMode.PercentOutput, speedStraight + speedLeft - speedRight);
 
   }
 }

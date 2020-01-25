@@ -7,13 +7,13 @@ import frc.robot.Constants.CarouselConstants;
 
 public class CarouselSubsystem extends SubsystemBase {
 
-    private final VictorSPX rotateMotor;
+    private final VictorSPX m_rotateMotor;
 
     public CarouselSubsystem() {
-        rotateMotor = new VictorSPX(CarouselConstants.kRotatePort);
+        m_rotateMotor = new VictorSPX(CarouselConstants.kRotatePort);
     }
 
     public void rotate(double speed) {
-        rotateMotor.set(ControlMode.PercentOutput, speed);
+        m_rotateMotor.set(ControlMode.PercentOutput, speed);
     }
 }
