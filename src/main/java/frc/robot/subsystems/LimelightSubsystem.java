@@ -2,26 +2,43 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LimelightConstants;
 
 public class LimelightSubsystem extends SubsystemBase {
 
     private final NetworkTable m_limelightTable;
+    private boolean isTargetVisible;
+    private double xAngle, yAngle, distance;
 
     public LimelightSubsystem() {
         m_limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
+    public void periodic() {
+        isTargetVisible = m_limelightTable.getEntry("tv").getDouble(0) == 1;
+        xAngle = m_limelightTable.getEntry("tx").getDouble(0);
+        yAngle = m_limelightTable.getEntry("ty").getDouble(0);
+        distance = (LimelightConstants.kTargetHeight - LimelightConstants.kCameraHeight)
+                / (Math.tan(Math.toRadians(LimelightConstants.kCameraAngle + getYAngle())));
+        SmartDashboard.putNumber("Distance", distance);
+    }
+
     public boolean isTargetVisible() {
-        return m_limelightTable.getEntry("tv").getDouble(0) == 1;
+        return isTargetVisible;
     }
 
     public double getXAngle() {
-        return m_limelightTable.getEntry("tx").getDouble(0);
+        return xAngle;
     }
 
     public double getYAngle() {
-        return m_limelightTable.getEntry("ty").getDouble(0);
+        return yAngle;
+    }
+
+    public double getDistance() {
+        return distance;
     }
 
     public void turnOnLight() {

@@ -5,6 +5,7 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,7 +24,8 @@ public class FlywheelSubsystem extends SubsystemBase {
         m_neoFlywheel.setInverted(true);
         m_neoFlywheel.setIdleMode(IdleMode.kBrake);
         m_neoFlywheel.enableVoltageCompensation(12);
-        m_neoFlywheel.setSmartCurrentLimit(40);
+        m_neoFlywheel.setSmartCurrentLimit(60);
+        m_neoFlywheel.enableSoftLimit(SoftLimitDirection.kReverse, true);
         m_neoController = m_neoFlywheel.getPIDController();
         m_neoEncoder = m_neoFlywheel.getEncoder();
 
@@ -35,7 +37,7 @@ public class FlywheelSubsystem extends SubsystemBase {
         m_neoController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
     }
 
-    public void periodic() {
+    public void periodict() {
         double speed = m_neoEncoder.getVelocity();
         SmartDashboard.putNumber("Flywheel SetPoint", m_setPoint);
         SmartDashboard.putNumber("Flywheel Speed Graph", speed);
@@ -47,7 +49,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 
     public void setSetpoint(double setPoint) {
         m_setPoint = setPoint;
-        
+
         // Disable the motor completely at rest, preventing oscillations
         if (setPoint == 0) {
             m_neoFlywheel.stopMotor();

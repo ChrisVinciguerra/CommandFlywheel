@@ -28,12 +28,16 @@ public final class Constants {
     }
 
     public static final class LimelightConstants {
-        public static final double kDisP = .13;
-        public static final double kDisI = .17;
-        public static final double kDisD = .001;
-        public static final double kTurnP = .05;
-        public static final double kTurnI = .008;
-        public static final double kTurnD = .002;
+        public static final double kDisP = .016;
+        public static final double kDisI = 0;
+        public static final double kDisD = 0;
+        public static final double kTurnP = 0.022;
+        public static final double kTurnI = 0.00001;
+        public static final double kTurnD = 0;
+        public static final double kCameraHeight = 27.6;
+        public static final double kCameraAngle = 18.43;
+        public static final double kTargetHeight = 89.75;// 6ft, 9.25in + 8.5 in
+        public static final double kMinOutput = .13;
     }
 
     public static final class ControllerConstants {

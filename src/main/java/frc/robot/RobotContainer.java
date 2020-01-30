@@ -10,10 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.FlywheelConstants;
 import frc.robot.Constants.ControllerConstants.*;
-import frc.robot.commands.drivetraincommands.ArcadeDriveCommand;
-import frc.robot.commands.limelightcommands.LimelightTargetCommand;
+import frc.robot.commands.limelightcommands.*;
+import frc.robot.commands.drivetraincommands.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -29,9 +28,10 @@ public class RobotContainer {
 	public RobotContainer() {
 		configureButtonBindings();
 
+		m_limelight.turnOnLight();
 		// Drivetrain
 		m_drivetrain.setDefaultCommand(
-				new ArcadeDriveCommand(m_drivetrain, () -> m_driverController.getRawAxis(Axis.kLeftY),
+				new ArcadeDriveCommand(m_drivetrain, () -> -m_driverController.getRawAxis(Axis.kLeftY),
 						() -> (m_driverController.getRawAxis(Axis.kLeftTrigger) + 1) / 2,
 						() -> (m_driverController.getRawAxis(Axis.kRightTrigger) + 1) / 2));
 
@@ -43,14 +43,13 @@ public class RobotContainer {
 		new POVButton(m_driverController, DPad.kLeft).whenPressed(() -> m_flywheel.setSetpoint(1200), m_flywheel);
 		new POVButton(m_driverController, DPad.kUp).whenPressed(() -> m_flywheel.setSetpoint(1400), m_flywheel);
 		new POVButton(m_driverController, DPad.kRight).whenPressed(() -> m_flywheel.setSetpoint(1600), m_flywheel);
-		new JoystickButton(m_driverController, Button.kLeftBumper).whileHeld(
-				() -> m_flywheel.setSetpoint(-m_driverController.getRawAxis(Axis.kRightY) * FlywheelConstants.kMaxRPM),
-				m_flywheel);
+		new JoystickButton(m_driverController, Button.kLeftBumper)
+				.whenPressed(new LimelightFlywheelCommand(m_limelight, m_flywheel));
 		new JoystickButton(m_driverController, Button.kRightBumper).whileHeld(() -> m_flywheel.setSetpoint(0),
 				m_flywheel);
 
 		// Carousel
-		new JoystickButton(m_driverController, Button.kSquare).whenPressed(() -> m_carousel.rotate(1), m_carousel);
+		new JoystickButton(m_driverController, Button.kSquare).whenPressed(() -> m_carousel.rotate(.2), m_carousel);
 		new JoystickButton(m_driverController, Button.kTriangle).whenPressed(() -> m_carousel.rotate(0), m_carousel);
 
 		// Feeder
@@ -59,7 +58,9 @@ public class RobotContainer {
 
 		// Limelight
 		new JoystickButton(m_driverController, Button.kTrackpad)
-				.whenPressed(new LimelightTargetCommand(m_limelight, m_drivetrain));
+				.whileHeld(new LimelightTurnCommand(m_limelight, m_drivetrain));
+
+		new JoystickButton(m_driverController, Button.kPS).whileHeld(new LimelightTurnDistanceCommand(m_limelight, m_drivetrain));
 	}
 
 	public Command getAutonomousCommand() {

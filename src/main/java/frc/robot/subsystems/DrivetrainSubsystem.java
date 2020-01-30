@@ -12,7 +12,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public DrivetrainSubsystem() {
     m_topLeft = new TalonSRX(DrivetrainConstants.kTopLeftPort);
     m_topLeft.setInverted(true);
-    
     m_frontLeft = new TalonSRX(DrivetrainConstants.kFrontLeftPort);
     m_frontLeft.setInverted(false);
     m_frontLeft.follow(m_topLeft);
