@@ -12,7 +12,8 @@ public class LimelightTurnDistanceCommand extends CommandBase {
     private final DrivetrainSubsystem m_drivetrainSubsystem;
     private PIDController turnController, distanceController;
 
-    public LimelightTurnDistanceCommand(LimelightSubsystem limelightSubsystem, DrivetrainSubsystem drivetrainSubsystem) {
+    public LimelightTurnDistanceCommand(LimelightSubsystem limelightSubsystem,
+            DrivetrainSubsystem drivetrainSubsystem) {
         m_limelightSubsystem = limelightSubsystem;
         m_drivetrainSubsystem = drivetrainSubsystem;
         addRequirements(drivetrainSubsystem);
@@ -31,11 +32,6 @@ public class LimelightTurnDistanceCommand extends CommandBase {
 
     public void execute() {
         double turnSpeed = turnController.calculate(m_limelightSubsystem.getXAngle());
-        if (Math.abs(turnSpeed) < LimelightConstants.kMinOutput) {
-            turnSpeed = turnSpeed > 0 ? LimelightConstants.kMinOutput + turnSpeed
-                    : -LimelightConstants.kMinOutput + turnSpeed;
-        }
-
         double distanceSpeed = -distanceController.calculate(m_limelightSubsystem.getDistance());
         if (m_limelightSubsystem.isTargetVisible()
                 && (!turnController.atSetpoint() || !distanceController.atSetpoint())) {

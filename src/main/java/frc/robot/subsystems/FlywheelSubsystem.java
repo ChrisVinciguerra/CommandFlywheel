@@ -37,7 +37,7 @@ public class FlywheelSubsystem extends SubsystemBase {
         m_neoController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
     }
 
-    public void periodict() {
+    /*public void periodic() {
         double speed = m_neoEncoder.getVelocity();
         SmartDashboard.putNumber("Flywheel SetPoint", m_setPoint);
         SmartDashboard.putNumber("Flywheel Speed Graph", speed);
@@ -46,6 +46,7 @@ public class FlywheelSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Flywheel Current", m_neoFlywheel.getOutputCurrent());
         SmartDashboard.putNumber("Flywheel Output", m_neoFlywheel.getAppliedOutput());
     }
+    */
 
     public void setSetpoint(double setPoint) {
         m_setPoint = setPoint;

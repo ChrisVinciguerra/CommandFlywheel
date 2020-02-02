@@ -25,7 +25,7 @@ public class LimelightFlywheelCommand extends CommandBase {
     }
 
     public double calculateSpeed(double distance) {
-        // TODO - test and tune
-        return 1000;
+        //Todo - Test with points and do a regression to get a formula
+        return m_limelightSubsystem.getDistance() * 100;
     }
 }
