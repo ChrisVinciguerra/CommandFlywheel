@@ -35,14 +35,14 @@ public class LimelightTurnDistanceCommand extends CommandBase {
         double distanceSpeed = -distanceController.calculate(m_limelightSubsystem.getDistance());
         if (m_limelightSubsystem.isTargetVisible()
                 && (!turnController.atSetpoint() || !distanceController.atSetpoint())) {
-            m_drivetrainSubsystem.arcadeDrive(distanceSpeed, turnSpeed, 0);
+            //m_drivetrainSubsystem.arcadeDrive(distanceSpeed, turnSpeed, 0);
         } else {
-            m_drivetrainSubsystem.arcadeDrive(0, 0, 0);
+            //m_drivetrainSubsystem.arcadeDrive(0, 0, 0);
         }
     }
 
     public void end(boolean interrputed) {
-        m_drivetrainSubsystem.arcadeDrive(0, 0, 0);
+        //m_drivetrainSubsystem.arcadeDrive(0, 0, 0);
     }
 
     public boolean isFinished() {

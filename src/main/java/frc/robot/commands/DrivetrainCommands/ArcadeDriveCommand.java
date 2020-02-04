@@ -22,6 +22,6 @@ public class ArcadeDriveCommand extends CommandBase {
 		double speedStraight = Math.abs(m_speedStraight.getAsDouble()) > .05 ? m_speedStraight.getAsDouble() : 0;
 		double speedLeft = Math.abs(m_speedLeft.getAsDouble()) > .05 ? m_speedLeft.getAsDouble() : 0;
 		double speedRight = Math.abs(m_speedRight.getAsDouble()) > .05 ? m_speedRight.getAsDouble() : 0;
-		m_drivetrainSubsystem.arcadeDrive(speedStraight, speedLeft, speedRight);
+		m_drivetrainSubsystem.arcadeDrive(speedStraight, speedRight-speedLeft);
 	}
 }

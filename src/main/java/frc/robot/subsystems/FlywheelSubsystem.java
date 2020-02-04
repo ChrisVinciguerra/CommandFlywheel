@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FlywheelConstants;
+import frc.robot.Constants.LoggingConstants;
 
 public class FlywheelSubsystem extends SubsystemBase {
     private final CANSparkMax m_neoFlywheel;
@@ -37,16 +38,17 @@ public class FlywheelSubsystem extends SubsystemBase {
         m_neoController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
     }
 
-    /*public void periodic() {
-        double speed = m_neoEncoder.getVelocity();
-        SmartDashboard.putNumber("Flywheel SetPoint", m_setPoint);
-        SmartDashboard.putNumber("Flywheel Speed Graph", speed);
-        SmartDashboard.putNumber("Flywheel Speed", speed);
-        SmartDashboard.putNumber("Flywheel Temperature", m_neoFlywheel.getMotorTemperature());
-        SmartDashboard.putNumber("Flywheel Current", m_neoFlywheel.getOutputCurrent());
-        SmartDashboard.putNumber("Flywheel Output", m_neoFlywheel.getAppliedOutput());
+    public void periodic() {
+        if (LoggingConstants.kEnableFlywheelLogging) {
+            double speed = m_neoEncoder.getVelocity();
+            SmartDashboard.putNumber("Flywheel SetPoint", m_setPoint);
+            SmartDashboard.putNumber("Flywheel Speed Graph", speed);
+            SmartDashboard.putNumber("Flywheel Speed", speed);
+            SmartDashboard.putNumber("Flywheel Temperature", m_neoFlywheel.getMotorTemperature());
+            SmartDashboard.putNumber("Flywheel Current", m_neoFlywheel.getOutputCurrent());
+            SmartDashboard.putNumber("Flywheel Output", m_neoFlywheel.getAppliedOutput());
+        }
     }
-    */
 
     public void setSetpoint(double setPoint) {
         m_setPoint = setPoint;

@@ -1,18 +1,47 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
+
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public final class Constants {
-    public static class CarouselConstants {
+    public static final class LoggingConstants{
+        public static final boolean kEnableFlywheelLogging = false;
+        public static final boolean kEnableDrivetrainLogging = false;
+        public static final boolean kEnableLimelightLogging = false;
+    }
+    public static final class CarouselConstants {
         public static final int kFeedPort = 7;
         public static final int kRotatePort = 11;
     }
 
     public static final class DrivetrainConstants {
-        public static final int kTopLeftPort = 10;
-        public static final int kFrontLeftPort = 9;
-        public static final int kBackLeftPort = 8;
-        public static final int kTopRightPort = 4;
-        public static final int kFrontRightPort = 2;
-        public static final int kBackRightPort = 3;
+        public static final int kLeftTopPort = 2;
+        public static final InvertType kLeftTopInvert = InvertType.InvertMotorOutput;
+        public static final int kLeftFrontPort = 4;
+        public static final InvertType kLeftFrontInvert = InvertType.InvertMotorOutput;
+        public static final int kRightTopPort = 1;
+        public static final InvertType kRightTopInvert = InvertType.None;
+        public static final int kRightFrontPort = 3;
+        public static final InvertType kRightFrontInvert = InvertType.None;
+
+        public static final SPI.Port kGyroPort = SPI.Port.kMXP;
+        public static final boolean kGyroReversed = true;
+        //Sample Values - CHANGE
+        public static final double ksVolts = .77;
+        public static final double kvVoltSecondsPerMeter = 5.84;
+        public static final double kaVoltSecondsSquaredPerMeter = .627;
+        public static final double kPDriveVel = 16.9;
+        public static final double kTrackwidthMeters = 0.713288;
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxRotSpeedMetersPerSecond = 3;
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = .7;
+        public static final double kWheelDiameterMeters = .1524;
+        public static final double kEncoderEdgesPerRotation = 4106;
     }
 
     public static final class FlywheelConstants {
