@@ -55,6 +55,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Right Encoder Position", getRightEncoderDistance());
       SmartDashboard.putNumber("Left Encoder Velocity", getLeftEncoderVelocity());
       SmartDashboard.putNumber("Right Encoder Velocity", getRightEncoderVelocity());
+      SmartDashboard.putNumber("Trans x", getPose().getTranslation().getX());
+      SmartDashboard.putNumber("Trans y", getPose().getTranslation().getY());
+      SmartDashboard.putNumber("Rot", getPose().getRotation().getDegrees());
     }
   }
 
@@ -63,8 +66,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(m_leftTop.getSelectedSensorVelocity(),
-        m_rightTop.getSelectedSensorVelocity());
+    return new DifferentialDriveWheelSpeeds(getLeftEncoderVelocity(), getRightEncoderVelocity());
   }
 
   public void resetOdometry(Pose2d pose) {
@@ -77,6 +79,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
+    SmartDashboard.putNumber("Left Voltage", leftVolts);
+    SmartDashboard.putNumber("Right Voltage", -rightVolts);
+
     m_leftMotors.setVoltage(leftVolts);
     m_rightMotors.setVoltage(-rightVolts);
     m_drive.feed();
@@ -102,12 +107,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getLeftEncoderVelocity() {
-    return m_leftTop.getSelectedSensorVelocity() * Math.PI * DrivetrainConstants.kWheelDiameterMeters
+    return m_leftTop.getSelectedSensorVelocity() * 10 * Math.PI * DrivetrainConstants.kWheelDiameterMeters
         / DrivetrainConstants.kEncoderEdgesPerRotation;
   }
 
   public double getRightEncoderVelocity() {
-    return m_rightTop.getSelectedSensorVelocity() * Math.PI * DrivetrainConstants.kWheelDiameterMeters
+    return m_rightTop.getSelectedSensorVelocity() * 10 * Math.PI * DrivetrainConstants.kWheelDiameterMeters
         / DrivetrainConstants.kEncoderEdgesPerRotation;
   }
 

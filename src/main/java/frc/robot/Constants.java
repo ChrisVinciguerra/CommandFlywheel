@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 public final class Constants {
     public static final class LoggingConstants{
         public static final boolean kEnableFlywheelLogging = false;
-        public static final boolean kEnableDrivetrainLogging = false;
+        public static final boolean kEnableDrivetrainLogging = true;
         public static final boolean kEnableLimelightLogging = false;
     }
     public static final class CarouselConstants {
@@ -27,7 +27,7 @@ public final class Constants {
         public static final InvertType kRightFrontInvert = InvertType.None;
 
         public static final SPI.Port kGyroPort = SPI.Port.kMXP;
-        public static final boolean kGyroReversed = true;
+        public static final boolean kGyroReversed = false;
         //Sample Values - CHANGE
         public static final double ksVolts = .77;
         public static final double kvVoltSecondsPerMeter = 5.84;
@@ -35,9 +35,9 @@ public final class Constants {
         public static final double kPDriveVel = 16.9;
         public static final double kTrackwidthMeters = 0.713288;
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxRotSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = .5;
+        public static final double kMaxAccelerationMetersPerSecondSquared = .5;
+        public static final double kMaxRotSpeedMetersPerSecond = 2;
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = .7;
         public static final double kWheelDiameterMeters = .1524;
