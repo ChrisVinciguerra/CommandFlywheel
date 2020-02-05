@@ -20,15 +20,16 @@ public final class Constants {
         public static final int kLeftTopPort = 2;
         public static final InvertType kLeftTopInvert = InvertType.InvertMotorOutput;
         public static final int kLeftFrontPort = 4;
-        public static final InvertType kLeftFrontInvert = InvertType.InvertMotorOutput;
+        public static final InvertType kLeftFrontInvert = InvertType.FollowMaster;
         public static final int kRightTopPort = 1;
-        public static final InvertType kRightTopInvert = InvertType.None;
+        public static final InvertType kRightTopInvert = InvertType.InvertMotorOutput;
         public static final int kRightFrontPort = 3;
-        public static final InvertType kRightFrontInvert = InvertType.None;
+        public static final InvertType kRightFrontInvert = InvertType.FollowMaster;
 
         public static final SPI.Port kGyroPort = SPI.Port.kMXP;
+        //Gyro should increase as it turns ccw
         public static final boolean kGyroReversed = false;
-        //Sample Values - CHANGE
+        
         public static final double ksVolts = .77;
         public static final double kvVoltSecondsPerMeter = 5.84;
         public static final double kaVoltSecondsSquaredPerMeter = .627;

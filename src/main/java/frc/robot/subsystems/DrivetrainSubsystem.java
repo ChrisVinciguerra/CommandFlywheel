@@ -19,8 +19,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private final WPI_TalonSRX m_leftTop, m_rightTop;
   private WPI_VictorSPX m_leftFront, m_rightFront;
-  private final SpeedControllerGroup m_leftMotors, m_rightMotors;
-  private final DifferentialDrive m_drive;
   private final AHRS m_gyro;
   private final DifferentialDriveOdometry m_odometry;
 
@@ -29,30 +27,28 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftTop.setInverted(DrivetrainConstants.kLeftTopInvert);
     m_leftFront = new WPI_VictorSPX(DrivetrainConstants.kLeftFrontPort);
     m_leftFront.setInverted(DrivetrainConstants.kLeftFrontInvert);
+    m_leftFront.follow(m_leftTop);
+
     m_rightTop = new WPI_TalonSRX(DrivetrainConstants.kRightTopPort);
     m_rightTop.setInverted(DrivetrainConstants.kRightTopInvert);
     m_rightFront = new WPI_VictorSPX(DrivetrainConstants.kRightFrontPort);
     m_rightFront.setInverted(DrivetrainConstants.kRightFrontInvert);
-
-    m_leftMotors = new SpeedControllerGroup(m_leftTop, m_leftFront);
-    m_rightMotors = new SpeedControllerGroup(m_rightTop, m_rightFront);
+    m_rightFront.follow(m_rightTop);
 
     m_gyro = new AHRS(DrivetrainConstants.kGyroPort);
 
     resetEncoders();
 
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-
-    m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
   }
 
   public void periodic() {
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderDistance(), getRightEncoderDistance());
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftEncoderPosition(), getRightEncoderPosition());
 
     if (LoggingConstants.kEnableDrivetrainLogging) {
       SmartDashboard.putNumber("Heading", getHeading());
-      SmartDashboard.putNumber("Left Encoder Position", getLeftEncoderDistance());
-      SmartDashboard.putNumber("Right Encoder Position", getRightEncoderDistance());
+      SmartDashboard.putNumber("Left Encoder Position", getLeftEncoderPosition());
+      SmartDashboard.putNumber("Right Encoder Position", getRightEncoderPosition());
       SmartDashboard.putNumber("Left Encoder Velocity", getLeftEncoderVelocity());
       SmartDashboard.putNumber("Right Encoder Velocity", getRightEncoderVelocity());
       SmartDashboard.putNumber("Trans x", getPose().getTranslation().getX());
@@ -74,17 +70,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
-  public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(fwd, rot);
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    m_leftTop.set(leftSpeed);
+    m_rightTop.set(rightSpeed);
+    m_leftTop.feed();
+    m_rightTop.feed();
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     SmartDashboard.putNumber("Left Voltage", leftVolts);
-    SmartDashboard.putNumber("Right Voltage", -rightVolts);
+    SmartDashboard.putNumber("Right Voltage", rightVolts);
 
-    m_leftMotors.setVoltage(leftVolts);
-    m_rightMotors.setVoltage(-rightVolts);
-    m_drive.feed();
+    m_leftTop.setVoltage(leftVolts);
+    m_rightTop.setVoltage(rightVolts);
+    m_leftTop.feed();
+    m_rightTop.feed();
   }
 
   public void resetEncoders() {
@@ -92,18 +92,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightTop.setSelectedSensorPosition(0);
   }
 
-  public double getLeftEncoderDistance() {
+  public double getLeftEncoderPosition() {
     return m_leftTop.getSelectedSensorPosition() * Math.PI * DrivetrainConstants.kWheelDiameterMeters
         / DrivetrainConstants.kEncoderEdgesPerRotation;
   }
 
-  public double getRightEncoderDistance() {
+  public double getRightEncoderPosition() {
     return m_rightTop.getSelectedSensorPosition() * Math.PI * DrivetrainConstants.kWheelDiameterMeters
         / DrivetrainConstants.kEncoderEdgesPerRotation;
   }
 
   public double getAverageEncoderDistance() {
-    return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+    return (getLeftEncoderPosition() + getRightEncoderPosition()) / 2.0;
   }
 
   public double getLeftEncoderVelocity() {
@@ -114,10 +114,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public double getRightEncoderVelocity() {
     return m_rightTop.getSelectedSensorVelocity() * 10 * Math.PI * DrivetrainConstants.kWheelDiameterMeters
         / DrivetrainConstants.kEncoderEdgesPerRotation;
-  }
-
-  public void setMaxOutput(double maxOutput) {
-    m_drive.setMaxOutput(maxOutput);
   }
 
   public void zeroHeading() {

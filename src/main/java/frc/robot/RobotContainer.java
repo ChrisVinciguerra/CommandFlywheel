@@ -10,15 +10,9 @@ package frc.robot;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.controller.*;
+import edu.wpi.first.wpilibj.geometry.*;
+import edu.wpi.first.wpilibj.trajectory.*;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.ControllerConstants;
@@ -42,10 +36,9 @@ public class RobotContainer {
 	public RobotContainer() {
 		/// configureButtonBindings();
 
-		/// m_limelight.turnOnLight();
 		// Drivetrain
 		m_drivetrain.setDefaultCommand(
-				new ArcadeDriveCommand(m_drivetrain, () -> -m_driverController.getRawAxis(Axis.kLeftY),
+				new VelocityDriveCommand(m_drivetrain, () -> -m_driverController.getRawAxis(Axis.kLeftY),
 						() -> (m_driverController.getRawAxis(Axis.kLeftTrigger) + 1) / 2,
 						() -> (m_driverController.getRawAxis(Axis.kRightTrigger) + 1) / 2));
 

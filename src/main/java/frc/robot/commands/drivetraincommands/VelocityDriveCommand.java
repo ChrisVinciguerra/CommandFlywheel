@@ -34,7 +34,7 @@ public class VelocityDriveCommand extends CommandBase {
                 .toWheelSpeeds(new ChassisSpeeds(speedStraight * DrivetrainConstants.kMaxSpeedMetersPerSecond, 0,
                         (speedRight - speedLeft) * DrivetrainConstants.kMaxRotSpeedMetersPerSecond));
         double leftVoltage = m_feedForward.calculate(wheelSpeeds.leftMetersPerSecond);
-        double rightVoltage = m_feedForward.calculate(wheelSpeeds.leftMetersPerSecond);
+        double rightVoltage = m_feedForward.calculate(wheelSpeeds.rightMetersPerSecond);
         m_drivetrainSubsystem.tankDriveVolts(leftVoltage, rightVoltage);
     }
 }
