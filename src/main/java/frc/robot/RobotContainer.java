@@ -1,19 +1,13 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.*;
 import edu.wpi.first.wpilibj.geometry.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.*;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -32,9 +26,12 @@ public class RobotContainer {
 	private final FlywheelSubsystem m_flywheel = new FlywheelSubsystem();
 	private final LimelightSubsystem m_limelight = new LimelightSubsystem();
 	private final Joystick m_driverController = new Joystick(ControllerConstants.kDriverControllerPort);
+	private final ArrayList<Trajectory> m_trajectories = new ArrayList<>();
 
 	public RobotContainer() {
+		SmartDashboard.putNumber("Trajectory Choice", 0);
 		/// configureButtonBindings();
+		generateTrajectories();
 
 		// Drivetrain
 		m_drivetrain.setDefaultCommand(
@@ -71,42 +68,28 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		// Create a voltage constraint to ensure we don't accelerate too fast
-		var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-				new SimpleMotorFeedforward(DrivetrainConstants.ksVolts, DrivetrainConstants.kvVoltSecondsPerMeter,
-						DrivetrainConstants.kaVoltSecondsSquaredPerMeter),
-				DrivetrainConstants.kDriveKinematics, 10);
+		int index = (int) SmartDashboard.getNumber("Trajectory Choice", 0);
+		if (index < m_trajectories.size()) {
+			return null;
+		}
+		Trajectory trajectory = m_trajectories.get(index);
 
-		// Create config for trajectory
-		TrajectoryConfig config = new TrajectoryConfig(DrivetrainConstants.kMaxSpeedMetersPerSecond,
-				DrivetrainConstants.kMaxAccelerationMetersPerSecondSquared)
-						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(DrivetrainConstants.kDriveKinematics)
-						// Apply the voltage constraint
-						.addConstraint(autoVoltageConstraint);
-
-		// An example trajectory to follow. All units in meters.
-		Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-				// Start at the origin facing the +X direction
-				new Pose2d(0, 0, new Rotation2d(0)),
-				// Pass through these two interior waypoints, making an 's' curve path
-				List.of(new Translation2d(1, 0), new Translation2d(2, 0)),
-				// End 3 meters straight ahead of where we started, facing forward
-				new Pose2d(3, 0, new Rotation2d(0)),
-				// Pass config
-				config);
-
-		RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, m_drivetrain::getPose,
-				new RamseteController(),
-				new SimpleMotorFeedforward(DrivetrainConstants.ksVolts, DrivetrainConstants.kvVoltSecondsPerMeter,
-						DrivetrainConstants.kaVoltSecondsSquaredPerMeter),
-				DrivetrainConstants.kDriveKinematics, m_drivetrain::getWheelSpeeds,
+		RamseteCommand ramseteCommand = new RamseteCommand(trajectory, m_drivetrain::getPose, new RamseteController(),
+				DrivetrainConstants.kFeedForward, DrivetrainConstants.kDriveKinematics, m_drivetrain::getWheelSpeeds,
 				new PIDController(DrivetrainConstants.kPDriveVel, 0, 0),
-				new PIDController(DrivetrainConstants.kPDriveVel, 0, 0),
-				// RamseteCommand passes volts to the callback
-				m_drivetrain::tankDriveVolts, m_drivetrain);
+				new PIDController(DrivetrainConstants.kPDriveVel, 0, 0), m_drivetrain::tankDriveVolts, m_drivetrain);
 
-		// Run path following command, then stop at the end.
 		return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0));
+	}
+
+	public void generateTrajectories() {
+		m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
+				List.of(new Translation2d(1, 0), new Translation2d(2, 0)), new Pose2d(3, 0, new Rotation2d(0)),
+				DrivetrainConstants.kTrajectoryConfig));
+
+		m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
+				List.of(new Translation2d(1, -.2), new Translation2d(2, .2), new Translation2d(3, 0),
+						new Translation2d(2, -.2), new Translation2d(1, .2)),
+				new Pose2d(0, 0, new Rotation2d(180)), DrivetrainConstants.kTrajectoryConfig));
 	}
 }
