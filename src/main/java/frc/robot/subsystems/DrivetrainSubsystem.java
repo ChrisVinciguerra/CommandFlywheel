@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -14,23 +13,28 @@ import frc.robot.Constants.LoggingConstants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
-  private final WPI_TalonSRX m_leftTop, m_rightTop;
-  private WPI_VictorSPX m_leftFront, m_rightFront;
+  private final WPI_TalonSRX m_leftTop, m_leftFront, m_leftBack, m_rightTop, m_rightFront, m_rightBack;
   private final AHRS m_gyro;
   private final DifferentialDriveOdometry m_odometry;
 
   public DrivetrainSubsystem() {
     m_leftTop = new WPI_TalonSRX(DrivetrainConstants.kLeftTopPort);
     m_leftTop.setInverted(DrivetrainConstants.kLeftTopInvert);
-    m_leftFront = new WPI_VictorSPX(DrivetrainConstants.kLeftFrontPort);
+    m_leftFront = new WPI_TalonSRX(DrivetrainConstants.kLeftFrontPort);
     m_leftFront.setInverted(DrivetrainConstants.kLeftFrontInvert);
     m_leftFront.follow(m_leftTop);
+    m_leftBack = new WPI_TalonSRX(DrivetrainConstants.kLeftBackPort);
+    m_leftBack.setInverted(DrivetrainConstants.kLeftBackInvert);
+    m_leftBack.follow(m_leftTop);
 
     m_rightTop = new WPI_TalonSRX(DrivetrainConstants.kRightTopPort);
     m_rightTop.setInverted(DrivetrainConstants.kRightTopInvert);
-    m_rightFront = new WPI_VictorSPX(DrivetrainConstants.kRightFrontPort);
+    m_rightFront = new WPI_TalonSRX(DrivetrainConstants.kRightFrontPort);
     m_rightFront.setInverted(DrivetrainConstants.kRightFrontInvert);
     m_rightFront.follow(m_rightTop);
+    m_rightBack = new WPI_TalonSRX(DrivetrainConstants.kRightBackPort);
+    m_rightBack.setInverted(DrivetrainConstants.kRightBackInvert);
+    m_rightBack.follow(m_rightTop);
 
     m_gyro = new AHRS(DrivetrainConstants.kGyroPort);
 

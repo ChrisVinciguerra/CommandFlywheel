@@ -21,15 +21,18 @@ public final class Constants {
     }
 
     public static final class DrivetrainConstants {
-        public static final int kLeftTopPort = 2;
+        public static final int kLeftTopPort = 10;
         public static final InvertType kLeftTopInvert = InvertType.InvertMotorOutput;
-        public static final int kLeftFrontPort = 4;
-        public static final InvertType kLeftFrontInvert = InvertType.FollowMaster;
-        public static final int kRightTopPort = 1;
+        public static final int kLeftFrontPort = 9;
+        public static final InvertType kLeftFrontInvert = InvertType.OpposeMaster;
+        public static final int kLeftBackPort = 8;
+        public static final InvertType kLeftBackInvert = InvertType.OpposeMaster;
+        public static final int kRightTopPort = 4;
         public static final InvertType kRightTopInvert = InvertType.InvertMotorOutput;
-        public static final int kRightFrontPort = 3;
+        public static final int kRightFrontPort = 2;
         public static final InvertType kRightFrontInvert = InvertType.FollowMaster;
-
+        public static final int kRightBackPort = 3;
+        public static final InvertType kRightBackInvert = InvertType.OpposeMaster;
         public static final SPI.Port kGyroPort = SPI.Port.kMXP;
         public static final boolean kGyroReversed = true;
 

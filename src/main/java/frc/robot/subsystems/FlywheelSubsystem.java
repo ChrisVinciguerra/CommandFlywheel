@@ -17,6 +17,7 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final CANPIDController m_neoController;
     private final CANEncoder m_neoEncoder;
     private double m_setPoint;
+    private int m_recoveryIterations;
 
     public FlywheelSubsystem() {
         // Initialize Motors
@@ -36,9 +37,18 @@ public class FlywheelSubsystem extends SubsystemBase {
         m_neoController.setIZone(FlywheelConstants.kIz);
         m_neoController.setFF(FlywheelConstants.kFF);
         m_neoController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
+
+        m_recoveryIterations = 0;
     }
 
     public void periodic() {
+        if (m_setPoint - m_neoEncoder.getVelocity() < (m_neoEncoder.getVelocity() / 100) && m_recoveryIterations > 0) {
+            SmartDashboard.putNumber("Recovery Time", m_recoveryIterations * .02);
+            m_recoveryIterations = 0;
+        } else {
+            m_recoveryIterations++;
+        }
+
         if (LoggingConstants.kEnableFlywheelLogging) {
             double speed = m_neoEncoder.getVelocity();
             SmartDashboard.putNumber("Flywheel SetPoint", m_setPoint);
