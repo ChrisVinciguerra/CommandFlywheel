@@ -35,6 +35,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_gyro = new AHRS(DrivetrainConstants.kGyroPort);
 
     resetEncoders();
+    zeroHeading();
 
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
@@ -75,9 +76,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    SmartDashboard.putNumber("Left Voltage", leftVolts);
-    SmartDashboard.putNumber("Right Voltage", rightVolts);
-
     m_leftTop.setVoltage(leftVolts);
     m_rightTop.setVoltage(rightVolts);
     m_leftTop.feed();

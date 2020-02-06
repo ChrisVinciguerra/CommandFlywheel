@@ -31,7 +31,6 @@ public final class Constants {
         public static final InvertType kRightFrontInvert = InvertType.FollowMaster;
 
         public static final SPI.Port kGyroPort = SPI.Port.kMXP;
-        // Gyro should increase as it turns ccw
         public static final boolean kGyroReversed = true;
 
         public static final double ksVolts = .77;
