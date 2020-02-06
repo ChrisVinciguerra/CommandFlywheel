@@ -68,8 +68,9 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
+		m_drivetrain.zeroHeading();
 		int index = (int) SmartDashboard.getNumber("Trajectory Choice", 0);
-		if (index < m_trajectories.size()) {
+		if (index > m_trajectories.size()) {
 			return null;
 		}
 		Trajectory trajectory = m_trajectories.get(index);
@@ -86,10 +87,13 @@ public class RobotContainer {
 		m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
 				List.of(new Translation2d(1, 0), new Translation2d(2, 0)), new Pose2d(3, 0, new Rotation2d(0)),
 				DrivetrainConstants.kTrajectoryConfig));
-
+		m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
+				List.of(new Translation2d(1, -.2), new Translation2d(2, .2), new Translation2d(3, -.2),
+						new Translation2d(4, .2)),
+				new Pose2d(5, 0, new Rotation2d(0)), DrivetrainConstants.kTrajectoryConfig));
 		m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
 				List.of(new Translation2d(1, -.2), new Translation2d(2, .2), new Translation2d(3, 0),
-						new Translation2d(2, -.2), new Translation2d(1, .2)),
-				new Pose2d(0, 0, new Rotation2d(180)), DrivetrainConstants.kTrajectoryConfig));
+						new Translation2d(2, -.2)),
+				new Pose2d(1, .2, new Rotation2d(180)), DrivetrainConstants.kTrajectoryConfig));
 	}
 }

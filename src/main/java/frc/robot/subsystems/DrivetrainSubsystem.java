@@ -95,7 +95,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getRightEncoderPosition() {
-    return m_rightTop.getSelectedSensorPosition() * Math.PI * DrivetrainConstants.kWheelDiameterMeters
+    return -m_rightTop.getSelectedSensorPosition() * Math.PI * DrivetrainConstants.kWheelDiameterMeters
         / DrivetrainConstants.kEncoderEdgesPerRotation;
   }
 
@@ -109,7 +109,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getRightEncoderVelocity() {
-    return m_rightTop.getSelectedSensorVelocity() * 10 * Math.PI * DrivetrainConstants.kWheelDiameterMeters
+    return -m_rightTop.getSelectedSensorVelocity() * 10 * Math.PI * DrivetrainConstants.kWheelDiameterMeters
         / DrivetrainConstants.kEncoderEdgesPerRotation;
   }
 
@@ -118,7 +118,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getHeading() {
-    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (DrivetrainConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getYaw() * (DrivetrainConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   public double getTurnRate() {

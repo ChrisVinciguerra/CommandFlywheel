@@ -27,12 +27,12 @@ public class VelocityDriveCommand extends CommandBase {
     }
 
     public void execute() {
-        double speedStraight = Math.abs(m_speedStraight.getAsDouble()) > .05 ? m_speedStraight.getAsDouble() : 0;
-        double speedLeft = Math.abs(m_speedLeft.getAsDouble()) > .05 ? m_speedLeft.getAsDouble() : 0;
-        double speedRight = Math.abs(m_speedRight.getAsDouble()) > .05 ? m_speedRight.getAsDouble() : 0;
+        double speedStraight = Math.abs(m_speedStraight.getAsDouble()) > .1 ? m_speedStraight.getAsDouble() : 0;
+        double speedLeft = Math.abs(m_speedLeft.getAsDouble()) > .1 ? m_speedLeft.getAsDouble() : 0;
+        double speedRight = Math.abs(m_speedRight.getAsDouble()) > .1 ? m_speedRight.getAsDouble() : 0;
         DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kDriveKinematics
                 .toWheelSpeeds(new ChassisSpeeds(speedStraight * DrivetrainConstants.kMaxSpeedMetersPerSecond, 0,
-                        (speedRight - speedLeft) * DrivetrainConstants.kMaxRotSpeedMetersPerSecond));
+                        (speedLeft - speedRight) * DrivetrainConstants.kMaxRotSpeedMetersPerSecond));
         double leftVoltage = m_feedForward.calculate(wheelSpeeds.leftMetersPerSecond);
         double rightVoltage = m_feedForward.calculate(wheelSpeeds.rightMetersPerSecond);
         m_drivetrainSubsystem.tankDriveVolts(leftVoltage, rightVoltage);

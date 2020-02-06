@@ -32,15 +32,15 @@ public final class Constants {
 
         public static final SPI.Port kGyroPort = SPI.Port.kMXP;
         // Gyro should increase as it turns ccw
-        public static final boolean kGyroReversed = false;
+        public static final boolean kGyroReversed = true;
 
         public static final double ksVolts = .77;
         public static final double kvVoltSecondsPerMeter = 5.84;
         public static final double kaVoltSecondsSquaredPerMeter = .627;
-        public static final double kPDriveVel = 16.9;
+        public static final double kPDriveVel = 1.69;
         public static final double kTrackwidthMeters = 0.713288;
-        public static final double kMaxSpeedMetersPerSecond = .5;
-        public static final double kMaxAccelerationMetersPerSecondSquared = .5;
+        public static final double kMaxSpeedMetersPerSecond = 2;
+        public static final double kMaxAccelerationMetersPerSecondSquared = .6;
         public static final double kMaxRotSpeedMetersPerSecond = 2;
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = .7;
