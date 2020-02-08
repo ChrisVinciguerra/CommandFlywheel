@@ -2,6 +2,7 @@ package frc.robot.commands.drivetraincommands;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
 import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArcadeDriveCommand extends CommandBase {
@@ -18,10 +19,14 @@ public class ArcadeDriveCommand extends CommandBase {
 		addRequirements(drivetrainSubsystem);
 	}
 
+	public void initialize() {
+		SmartDashboard.putString("Drive Type", "Traditional");
+	}
+
 	public void execute() {
-		double speedStraight = Math.abs(m_speedStraight.getAsDouble()) > .05 ? m_speedStraight.getAsDouble() : 0;
-		double speedLeft = Math.abs(m_speedLeft.getAsDouble()) > .05 ? m_speedLeft.getAsDouble() : 0;
-		double speedRight = Math.abs(m_speedRight.getAsDouble()) > .05 ? m_speedRight.getAsDouble() : 0;
+		double speedStraight = Math.abs(m_speedStraight.getAsDouble()) > .08 ? m_speedStraight.getAsDouble() : 0;
+		double speedLeft = Math.abs(m_speedLeft.getAsDouble()) > .08 ? m_speedLeft.getAsDouble() : 0;
+		double speedRight = Math.abs(m_speedRight.getAsDouble()) > .08 ? m_speedRight.getAsDouble() : 0;
 		m_drivetrainSubsystem.tankDrive(speedStraight - speedLeft + speedRight, speedStraight + speedLeft - speedRight);
 	}
 }
