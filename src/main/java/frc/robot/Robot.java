@@ -19,7 +19,6 @@ public class Robot extends TimedRobot {
   }
 
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SmartDashboard.putBoolean("Auto", false);
     if (m_autonomousCommand != null) {
       SmartDashboard.putBoolean("Auto", true);

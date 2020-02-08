@@ -16,7 +16,8 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final CANSparkMax m_neoFlywheel;
     private final CANPIDController m_neoController;
     private final CANEncoder m_neoEncoder;
-    private double m_setPoint;
+    private double m_setPoint, m_minSpeed;
+    private boolean lastAtSetpoint;
     private int m_recoveryIterations;
 
     public FlywheelSubsystem() {
@@ -39,19 +40,26 @@ public class FlywheelSubsystem extends SubsystemBase {
         m_neoController.setOutputRange(FlywheelConstants.kMinOutput, FlywheelConstants.kMaxOutput);
 
         m_recoveryIterations = 0;
+        m_minSpeed = 0;
+        lastAtSetpoint = false;
     }
 
     public void periodic() {
-        if (m_setPoint - m_neoEncoder.getVelocity() < (m_neoEncoder.getVelocity() / 100) && m_recoveryIterations > 0) {
-            SmartDashboard.putNumber("Recovery Time", m_recoveryIterations * .02);
+        if (Math.abs(m_setPoint - m_neoEncoder.getVelocity()) < ((m_setPoint / 100)*5)) {
+            if (m_recoveryIterations != 0) {
+                SmartDashboard.putNumber("Recovery Time", m_recoveryIterations / 50.0);
+            }
+            m_minSpeed = m_neoEncoder.getVelocity();
             m_recoveryIterations = 0;
-        } else {
+        } else if (m_setPoint != 0) {
+            m_minSpeed = m_neoEncoder.getVelocity() > m_minSpeed ? m_minSpeed : m_neoEncoder.getVelocity();
             m_recoveryIterations++;
+            SmartDashboard.putNumber("Minimum Speed", m_minSpeed);
         }
 
         if (LoggingConstants.kEnableFlywheelLogging) {
             double speed = m_neoEncoder.getVelocity();
-            SmartDashboard.putNumber("Flywheel SetPoint", m_setPoint);
+            SmartDashboard.putNumber("Flywheel Setpoint", m_setPoint);
             SmartDashboard.putNumber("Flywheel Speed Graph", speed);
             SmartDashboard.putNumber("Flywheel Speed", speed);
             SmartDashboard.putNumber("Flywheel Temperature", m_neoFlywheel.getMotorTemperature());

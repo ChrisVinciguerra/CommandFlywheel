@@ -29,13 +29,14 @@ public class RobotContainer {
 	private final ArrayList<Trajectory> m_trajectories = new ArrayList<>();
 
 	public RobotContainer() {
-		SmartDashboard.putNumber("Trajectory Choice", 0);
-		/// configureButtonBindings();
-		generateTrajectories();
+		SmartDashboard.putNumber("Minimum Speed", 0);
+		// SmartDashboard.putNumber("Trajectory Choice", 0);
+		configureButtonBindings();
+		// generateTrajectories();
 
-		// Drivetrain
+		// // Drivetrain
 		m_drivetrain.setDefaultCommand(
-				new VelocityDriveCommand(m_drivetrain, () -> -m_driverController.getRawAxis(Axis.kLeftY),
+				new ArcadeDriveCommand(m_drivetrain, () -> -m_driverController.getRawAxis(Axis.kLeftY),
 						() -> (m_driverController.getRawAxis(Axis.kLeftTrigger) + 1) / 2,
 						() -> (m_driverController.getRawAxis(Axis.kRightTrigger) + 1) / 2));
 
@@ -44,52 +45,52 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// Flywheel
 		new POVButton(m_driverController, DPad.kDown).whenPressed(() -> m_flywheel.setSetpoint(1000), m_flywheel);
-		new POVButton(m_driverController, DPad.kLeft).whenPressed(() -> m_flywheel.setSetpoint(1200), m_flywheel);
-		new POVButton(m_driverController, DPad.kUp).whenPressed(() -> m_flywheel.setSetpoint(1400), m_flywheel);
-		new POVButton(m_driverController, DPad.kRight).whenPressed(() -> m_flywheel.setSetpoint(1600), m_flywheel);
-		new JoystickButton(m_driverController, Button.kLeftBumper)
-				.whenPressed(new LimelightFlywheelCommand(m_limelight, m_flywheel));
+		new POVButton(m_driverController, DPad.kLeft).whenPressed(() -> m_flywheel.setSetpoint(2500), m_flywheel);
+		new POVButton(m_driverController, DPad.kUp).whenPressed(() -> m_flywheel.setSetpoint(3000), m_flywheel);
+		new POVButton(m_driverController, DPad.kRight).whenPressed(() -> m_flywheel.setSetpoint(3150), m_flywheel);
+		// new JoystickButton(m_driverController, Button.kLeftBumper)
+		// 		.whenPressed(new LimelightFlywheelCommand(m_limelight, m_flywheel));
 		new JoystickButton(m_driverController, Button.kRightBumper).whileHeld(() -> m_flywheel.setSetpoint(0),
 				m_flywheel);
 
-		// Carousel
-		new JoystickButton(m_driverController, Button.kSquare).whenPressed(() -> m_carousel.rotate(.2), m_carousel);
-		new JoystickButton(m_driverController, Button.kTriangle).whenPressed(() -> m_carousel.rotate(0), m_carousel);
+		// // Carousel
+		// new JoystickButton(m_driverController, Button.kSquare).whenPressed(() -> m_carousel.rotate(.2), m_carousel);
+		// new JoystickButton(m_driverController, Button.kTriangle).whenPressed(() -> m_carousel.rotate(0), m_carousel);
 
-		// Feeder
-		new JoystickButton(m_driverController, Button.kX).whenPressed(() -> m_feeder.feed(1), m_feeder);
-		new JoystickButton(m_driverController, Button.kCircle).whenPressed(() -> m_feeder.feed(0), m_feeder);
+		// // Feeder
+		// new JoystickButton(m_driverController, Button.kX).whenPressed(() -> m_feeder.feed(1), m_feeder);
+		// new JoystickButton(m_driverController, Button.kCircle).whenPressed(() -> m_feeder.feed(0), m_feeder);
 
-		// Limelight
-		new JoystickButton(m_driverController, Button.kTrackpad)
-				.whileHeld(new LimelightTurnCommand(m_limelight, m_drivetrain));
-		new JoystickButton(m_driverController, Button.kPS)
-				.whileHeld(new LimelightTurnDistanceCommand(m_limelight, m_drivetrain));
+		// // Limelight
+		// new JoystickButton(m_driverController, Button.kTrackpad)
+		// 		.whileHeld(new LimelightTurnCommand(m_limelight, m_drivetrain));
+		// new JoystickButton(m_driverController, Button.kPS)
+		// 		.whileHeld(new LimelightTurnDistanceCommand(m_limelight, m_drivetrain));
 	}
 
-	public Command getAutonomousCommand() {
-		int index = (int) SmartDashboard.getNumber("Trajectory Choice", 0);
-		if (index > m_trajectories.size()) {
-			return null;
-		}
-		Trajectory trajectory = m_trajectories.get(index);
+	// public Command getAutonomousCommand() {
+	// 	int index = (int) SmartDashboard.getNumber("Trajectory Choice", 0);
+	// 	if (index > m_trajectories.size()) {
+	// 		return null;
+	// 	}
+	// 	Trajectory trajectory = m_trajectories.get(index);
 
-		RamseteCommand ramseteCommand = new RamseteCommand(trajectory, m_drivetrain::getPose, new RamseteController(),
-				DrivetrainConstants.kFeedForward, DrivetrainConstants.kDriveKinematics, m_drivetrain::getWheelSpeeds,
-				new PIDController(DrivetrainConstants.kPDriveVel, 0, 0),
-				new PIDController(DrivetrainConstants.kPDriveVel, 0, 0), m_drivetrain::tankDriveVolts, m_drivetrain);
+	// 	RamseteCommand ramseteCommand = new RamseteCommand(trajectory, m_drivetrain::getPose, new RamseteController(),
+	// 			DrivetrainConstants.kFeedForward, DrivetrainConstants.kDriveKinematics, m_drivetrain::getWheelSpeeds,
+	// 			new PIDController(DrivetrainConstants.kPDriveVel, 0, 0),
+	// 			new PIDController(DrivetrainConstants.kPDriveVel, 0, 0), m_drivetrain::tankDriveVolts, m_drivetrain);
 
-		return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0));
-	}
+	// 	return ramseteCommand.andThen(() -> m_drivetrain.tankDriveVolts(0, 0));
+	// }
 
-	public void generateTrajectories() {
-		m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
-				List.of(new Translation2d(1, 0), new Translation2d(2, 0)), new Pose2d(3, 0, new Rotation2d(0)),
-				DrivetrainConstants.kTrajectoryConfig));
+	// public void generateTrajectories() {
+	// 	m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
+	// 			List.of(new Translation2d(1, 0), new Translation2d(2, 0)), new Pose2d(3, 0, new Rotation2d(0)),
+	// 			DrivetrainConstants.kTrajectoryConfig));
 				
-		m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
-				List.of(new Translation2d(1, -.2), new Translation2d(2, .2), new Translation2d(3, -.2),
-						new Translation2d(4, .2)),
-				new Pose2d(5, 0, new Rotation2d(0)), DrivetrainConstants.kTrajectoryConfig));
-	}
+	// 	m_trajectories.add(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
+	// 			List.of(new Translation2d(1, -.2), new Translation2d(2, .2), new Translation2d(3, -.2),
+	// 					new Translation2d(4, .2)),
+	// 			new Pose2d(5, 0, new Rotation2d(0)), DrivetrainConstants.kTrajectoryConfig));
+	// }
 }

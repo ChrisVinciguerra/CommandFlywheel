@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 
 public final class Constants {
     public static final class LoggingConstants {
-        public static final boolean kEnableFlywheelLogging = false;
-        public static final boolean kEnableDrivetrainLogging = true;
+        public static final boolean kEnableFlywheelLogging = true;
+        public static final boolean kEnableDrivetrainLogging = false;
         public static final boolean kEnableLimelightLogging = false;
     }
 
@@ -65,14 +65,14 @@ public final class Constants {
 
     public static final class FlywheelConstants {
         public static final int kFlywheelPort = 6;
-        public static final double kP = 5e-3;
+        public static final double kP = 5e-4;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kIz = 0;
         public static final double kFF = .00019;
         public static final double kMaxOutput = 1;
         public static final double kMinOutput = -1;
-        public static final double kMaxRPM = 5700;
+        public static final double kMaxRPM = 4000;
     }
 
     public static final class LimelightConstants {
